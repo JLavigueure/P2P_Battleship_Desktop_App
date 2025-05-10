@@ -44,10 +44,10 @@ public class Board {
      * @throws IndexOutOfBoundsException if the coordinates are out of bounds.
      */
     public BoardCell getCell(int x, int y) {
-        if (x < 0 || x >= board.length || y < 0 || y >= board[0].length) {
+        if (y < 0 || y >= board.length || x < 0 || x >= board[0].length) {
             throw new IndexOutOfBoundsException("Invalid cell coordinates: (" + x + ", " + y + ")");
         }
-        return board[x][y];
+        return board[y][x];
     }
 
     /**
@@ -138,7 +138,7 @@ public class Board {
         StringBuilder sb = new StringBuilder();
         for (int y = 0; y < board[0].length; y++) {
             for (int x = 0; x < board.length; x++) {
-                sb.append('[' + board[x][y].toString() + ']');
+                sb.append('[' + getCell(x, y).toString() + ']');
             }
             sb.append("\n");
         }
