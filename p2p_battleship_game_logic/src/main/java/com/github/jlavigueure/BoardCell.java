@@ -16,7 +16,7 @@ public class BoardCell {
         MISS;
     }
 
-    private CellState state;
+    private boolean hit;
     private Ship occupyingShip;
 
     /**
@@ -25,7 +25,6 @@ public class BoardCell {
      */
     public BoardCell(Ship ship) {
         this.occupyingShip = ship;
-        state = (ship != null) ? CellState.OCCUPIED : CellState.EMPTY;
     }
 
     /**
@@ -40,7 +39,11 @@ public class BoardCell {
      * @return The cell state.
      */
     public CellState getState() {
-        return state;
+        if (hit){
+            return (occupyingShip != null) ? CellState.HIT : CellState.MISS;
+        }else{
+            return (occupyingShip != null) ? CellState.OCCUPIED : CellState.EMPTY;
+        }
     }
 
     /**
@@ -49,10 +52,9 @@ public class BoardCell {
      * @throws IllegalStateException if cell is anything except empty.
      */
     public void setOccupied(Ship ship){
-        if (state != CellState.EMPTY) {
+        if (getState() != CellState.EMPTY) {
             throw new IllegalStateException("Cell is not empty and cannot be occupied.");
         }
-        state = CellState.OCCUPIED;
         occupyingShip = ship;
     }
 
@@ -61,12 +63,8 @@ public class BoardCell {
      * @return new cell state.
      */
     public CellState hit(){
-        if(state == CellState.EMPTY){
-            state = CellState.MISS;
-        } else if(state == CellState.OCCUPIED){
-            state = CellState.HIT;
-            occupyingShip.hit();
-        }
-        return state;
+        if (occupyingShip != null) occupyingShip.hit();
+        hit = true;
+        return getState();
     }
 }
