@@ -58,9 +58,12 @@ public class Board {
      * @param direction The direction in which to place the ship (UP, RIGHT, DOWN, LEFT).
      * @param ship The Ship object to place on the board.
      * @throws IndexOutOfBoundsException if the ship placement goes out of bounds.
-     * @throws IllegalArgumentException if invalid cells or a cell is not empty or ship is null.
+     * @throws IllegalArgumentException if invalid cells or a cell is not empty or ship is null or same ship object already on board.
      */
     public void placeShip(int x, int y, Direction direction, Ship ship) {
+        if (ships.contains(ship)){
+            throw new IllegalArgumentException("Ship already placed on board");
+        }
         int size = ship.getSize();
         BoardCell[] cellsToOccupy = new BoardCell[size];
         for (int i = 0; i < size; i++) {

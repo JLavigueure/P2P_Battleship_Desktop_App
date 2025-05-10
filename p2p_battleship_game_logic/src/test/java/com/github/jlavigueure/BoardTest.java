@@ -113,6 +113,15 @@ public class BoardTest {
     }
 
     @Test
+    public void testCannotPlaceSameShipTwice(){
+        board.placeShip(1, 1, Board.Direction.RIGHT, mockShip);
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            board.placeShip(0, 0, Board.Direction.DOWN, mockShip);
+        });
+    }
+
+    @Test
     public void testBoardToStringWithHitsAndMisses() {
         // Place cruiser horizontally at (1, 1)
         board.placeShip(1, 1, Board.Direction.RIGHT, mockShip);
