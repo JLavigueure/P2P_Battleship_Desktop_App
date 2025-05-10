@@ -13,25 +13,27 @@ public class BoardCell {
         EMPTY,
         OCCUPIED,
         HIT,
-        MISS;
+        MISS, 
+        UNKNOWN; // Unknown is used to represent opponent's board in fog-of-war. Can only be revealed as HIT or MISS. 
     }
 
-    private boolean hit;
     private Ship occupyingShip;
+    private CellState state;
 
     /**
      * Constructor for the BoardCell class.
-     * @param ship the occupying ship or null if empty
+     * @param state the initial state of the cell.
      */
-    public BoardCell(Ship ship) {
-        this.occupyingShip = ship;
+    public BoardCell(CellState state) {
+        this.occupyingShip = null;
+        this.state = state;
     }
 
     /**
      * Constructor for Boardcell initialized to EMPTY. 
      */
     public BoardCell() {
-        this(null);
+        this(CellState.EMPTY);
     }
 
     /**
@@ -39,32 +41,55 @@ public class BoardCell {
      * @return The cell state.
      */
     public CellState getState() {
-        if (hit){
-            return (occupyingShip != null) ? CellState.HIT : CellState.MISS;
-        }else{
-            return (occupyingShip != null) ? CellState.OCCUPIED : CellState.EMPTY;
-        }
+        return state;
     }
 
     /**
-     * Mark the cell as occupied.
-     * 
+     * Mark the cell as occupied. 
      * @throws IllegalStateException if cell is anything except empty.
+     * @throws IllegalArgumentException if ship is null.
      */
-    public void setOccupied(Ship ship){
+    public void setOccupied(Ship ship) {
         if (getState() != CellState.EMPTY) {
             throw new IllegalStateException("Cell is not empty and cannot be occupied.");
+        } else if (ship == null) {
+            throw new IllegalArgumentException("Ship cannot be null.");
         }
         occupyingShip = ship;
+        state = CellState.OCCUPIED;
     }
 
     /**
-     * Function to attack the cell. Does not prevent multiple hits to cell.
+     * Function to attack the cell.
      * @return new cell state.
+     * @throws IllegalStateException if cell already attacked or cell state is unknown.
      */
-    public CellState hit(){
-        if (occupyingShip != null) occupyingShip.hit();
-        hit = true;
+    public CellState hit() {
+        if (state == CellState.HIT || state == CellState.MISS){
+            throw new IllegalStateException("Cell already attacked.");
+        } else if (state == CellState.UNKNOWN){
+            throw new IllegalStateException("Can not hit unknown cell. Must use reveal methods.");
+        }else if (state == CellState.OCCUPIED){
+            state = CellState.HIT;
+            occupyingShip.hit();
+        } else {
+            state = CellState.MISS;
+        } 
         return getState();
     }
+
+    /**
+     * Function for revealing opponent board cell to either HIT or MISS.
+     * @param newState is the new state to set board to. Must be HIT or MISS.
+     * @throws IllegalStateException if cell state is not UNKNOWN.
+     * @throws IllegalArgumentException if newState is not HIT or MISS.
+     */
+    public void reveal(CellState newState) {
+        if (state != CellState.UNKNOWN){
+            throw new IllegalStateException("Can not reveal cell with known state.");
+        } else if (newState != CellState.HIT && newState != CellState.MISS){
+            throw new IllegalArgumentException("Can only reveal opponent board as HIT or MISS.");
+        }
+        this.state = newState;
+    } 
 }
