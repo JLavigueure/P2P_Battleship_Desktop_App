@@ -126,4 +126,19 @@ public class Board {
         }
         return true;
     }
+
+    /**
+     * Function to print the current state of the board.
+     */
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (int y = 0; y < board[0].length; y++) {
+            for (int x = 0; x < board.length; x++) {
+                sb.append('[' + board[x][y].toString() + ']');
+            }
+            sb.append("\n");
+        }
+        return sb.toString();
+    }
 }

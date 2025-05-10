@@ -92,4 +92,37 @@ public class BoardCell {
         }
         this.state = newState;
     } 
+
+    /**
+    * Returns a string representation of the BoarCell based on its current state. 
+    * <ul>
+    *   <li>EMPTY: returns a blank space " "</li>
+    *   <li>OCCUPIED: returns "S"</li>
+    *   <li>HIT: returns "X"</li>
+    *   <li>MISS: returns "O"</li>
+    *   <li>UNKNOWN: returns "?"</li>
+    * </ul>
+    * @return A string representing the cell's state. 
+    */
+    @Override
+    public String toString(){
+        String out = "";
+        switch (state){
+            case EMPTY: 
+                out = " ";
+                break;
+            case OCCUPIED:
+                out = "S";
+                break;
+            case HIT:
+                out = "X";
+                break;
+            case MISS:
+                out = "O";
+                break;
+            case UNKNOWN:
+                out = "?";
+        }
+        return out;
+    }
 }

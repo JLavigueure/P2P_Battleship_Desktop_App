@@ -111,4 +111,25 @@ public class BoardTest {
         BoardCell cell = new BoardCell(BoardCell.CellState.EMPTY);
         assertThrows(IllegalArgumentException.class, () -> cell.setOccupied(null));
     }
+
+    @Test
+    public void testBoardToStringWithHitsAndMisses() {
+        // Place cruiser horizontally at (1, 1)
+        board.placeShip(1, 1, Board.Direction.RIGHT, mockShip);
+
+        // Hit part of the ship at (1,1)
+        board.hit(1, 1);
+
+        // Miss on (0,0)
+        board.hit(0, 0);
+
+        String expected =
+                "[O][ ][ ][ ][ ]\n" +  // (0,0) is MISS
+                "[ ][X][S][S][ ]\n" +  // (1,1) is HIT, rest of cruiser is OCCUPIED
+                "[ ][ ][ ][ ][ ]\n" +
+                "[ ][ ][ ][ ][ ]\n" +
+                "[ ][ ][ ][ ][ ]\n";
+
+        assertEquals(expected, board.toString(), "Board toString output did not match expected.");
+    }
 }
