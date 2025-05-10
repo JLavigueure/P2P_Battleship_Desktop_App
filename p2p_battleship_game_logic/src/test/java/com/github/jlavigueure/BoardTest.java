@@ -129,11 +129,11 @@ public class BoardTest {
         // Hit part of the ship at (1,1)
         board.hit(1, 1);
 
-        // Miss on (0,0)
+        // Miss on (2,0)
         board.hit(2, 0);
 
         String expected =
-                "[ ][ ][O][ ][ ]\n" +  // (0,0) is MISS
+                "[ ][ ][O][ ][ ]\n" +  // (2,0) is MISS
                 "[ ][X][S][S][ ]\n" +  // (1,1) is HIT, rest of cruiser is OCCUPIED
                 "[ ][ ][ ][ ][ ]\n" +
                 "[ ][ ][ ][ ][ ]\n" +
