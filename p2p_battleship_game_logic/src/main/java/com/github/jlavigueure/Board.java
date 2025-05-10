@@ -1,0 +1,100 @@
+package com.github.jlavigueure;
+import com.github.jlavigueure.BoardCell;
+
+/**
+ * Board class representing the game board.
+ * The board is a 2D array of BoardCell objects.
+ */
+public class Board { 
+    /**
+     * Enum representing the four possible directions for ship placement.
+     */
+    public static enum Direction {
+        UP, 
+        RIGHT,
+        DOWN,
+        LEFT;
+    }
+
+    private final BoardCell[][] board;
+
+    /**
+     * Constructor for the Board class. Initializes the board with the specified width and height. All cells are initially empty.
+     * @param width
+     * @param height
+     */
+    public Board(int width, int height) {
+        this.board = new BoardCell[width][height];
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                board[i][j] = new BoardCell();
+            }
+        }
+    }
+
+    /**
+     * Function to get the cell at the specified coordinates.
+     * @param x The x-coordinate of the cell.   
+     * @param y The y-coordinate of the cell.
+     * @return The BoardCell object at the specified coordinates.
+     * @throws IndexOutOfBoundsException if the coordinates are out of bounds.
+     */
+    public BoardCell getCell(int x, int y) {
+        if (x < 0 || x >= board.length || y < 0 || y >= board[0].length) {
+            throw new IndexOutOfBoundsException("Invalid cell coordinates");
+        }
+        return board[x][y];
+    }
+
+    /**
+     * Function to place a ship on the board at the specified coordinates and direction. 
+     * If the ship placement is invalid, an exception is thrown and no changes are made to the board.
+     * @param x The x-coordinate of the starting cell.
+     * @param y The y-coordinate of the starting cell.
+     * @param direction The direction in which to place the ship (UP, RIGHT, DOWN, LEFT).
+     * @param ship The Ship object to place on the board.
+     * @throws IndexOutOfBoundsException if the ship placement goes out of bounds.
+     * @throws IllegalArgumentException if the ship placement overlaps with another ship.
+     */
+    public void placeShip(int x, int y, Direction direction, Ship ship) {
+        int size = ship.getSize();
+        BoardCell[] cells = new BoardCell[size];
+        for (int i = 0; i < size; i++) {
+            int newX = x;
+            int newY = y;
+            switch (direction) {
+                case UP:
+                    newY -= i;
+                    break;
+                case RIGHT:
+                    newX += i;
+                    break;
+                case DOWN:
+                    newY += i;
+                    break;
+                case LEFT:
+                    newX -= i;
+                    break;
+            }
+            BoardCell currentCell = this.getCell(newX, newY);
+            if (currentCell.getState() != BoardCell.CellState.EMPTY) {
+                throw new IllegalArgumentException("Cell already occupied");
+            }
+            cells[i] = currentCell;
+        }
+        for (BoardCell cell : cells) {
+            cell.setOccupied();
+        }
+    }
+
+    /**
+     * Function to attack the given cell. 
+     * @param x The x-coordinate of the cell.   
+     * @param y The y-coordinate of the cell.
+     * @return the state of the cell after attacking.
+     * @throws IndexOutOfBoundsException if the coordinates are out of bounds.
+     */
+    public BoardCell.CellState hit(int x, int y) {
+        return getCell(x, y).hit();
+    }
+}
