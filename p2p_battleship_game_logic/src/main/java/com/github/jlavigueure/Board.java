@@ -1,5 +1,6 @@
 package com.github.jlavigueure;
 import com.github.jlavigueure.BoardCell;
+import java.util.ArrayList;
 
 /**
  * Board class representing the game board.
@@ -17,6 +18,7 @@ public class Board {
     }
 
     private final BoardCell[][] board;
+    private ArrayList<Ship> ships;
 
     /**
      * Constructor for the Board class. Initializes the board with the specified width and height. All cells are initially empty.
@@ -30,6 +32,7 @@ public class Board {
                 board[i][j] = new BoardCell();
             }
         }
+        ships = new ArrayList<>();
     }
 
     /**
@@ -83,8 +86,9 @@ public class Board {
             cells[i] = currentCell;
         }
         for (BoardCell cell : cells) {
-            cell.setOccupied();
+            cell.setOccupied(ship);
         }
+        ships.add(ship);
     }
 
     /**
@@ -96,5 +100,16 @@ public class Board {
      */
     public BoardCell.CellState hit(int x, int y) {
         return getCell(x, y).hit();
+    }
+
+    /**
+     * Function which returns true if all ships are sunk.
+     * @return true if all ships sunk else false.
+     */
+    public boolean allShipsSunk(){
+        for (Ship ship : ships){
+            if (!ship.isSunk()) return false;
+        }
+        return true;
     }
 }

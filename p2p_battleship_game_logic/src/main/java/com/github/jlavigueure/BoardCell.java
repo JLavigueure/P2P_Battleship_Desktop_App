@@ -45,13 +45,15 @@ public class BoardCell {
 
     /**
      * Mark the cell as occupied.
+     * 
      * @throws IllegalStateException if cell is anything except empty.
      */
-    public void setOccupied(){
+    public void setOccupied(Ship ship){
         if (state != CellState.EMPTY) {
             throw new IllegalStateException("Cell is not empty and cannot be occupied.");
         }
         state = CellState.OCCUPIED;
+        occupyingShip = ship;
     }
 
     /**
@@ -63,6 +65,7 @@ public class BoardCell {
             state = CellState.MISS;
         } else if(state == CellState.OCCUPIED){
             state = CellState.HIT;
+            occupyingShip.hit();
         }
         return state;
     }

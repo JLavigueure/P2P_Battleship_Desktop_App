@@ -80,4 +80,44 @@ public class BoardTest {
         Board board = new Board(5, 5);
         assertThrows(IndexOutOfBoundsException.class, () -> board.hit(5, 5));
     }
+
+    @Test
+    public void testAllShipsSunk() {
+        Board board = new Board(5, 5);
+        Ship ship1 = new Ship(Ship.ShipType.DESTROYER);
+        Ship ship2 = new Ship(Ship.ShipType.SUBMARINE);
+
+        board.placeShip(0, 0, Board.Direction.RIGHT, ship1);
+        board.placeShip(2, 2, Board.Direction.DOWN, ship2);
+
+        // Hit all cells of ship1
+        board.hit(0, 0);
+        board.hit(1, 0);
+
+        // Hit all cells of ship2
+        board.hit(2, 2);
+        board.hit(2, 3);
+        board.hit(2, 4);
+
+        assertTrue(board.allShipsSunk());
+    }
+
+    @Test
+    public void testAllShipsNotSunk() {
+        Board board = new Board(5, 5);
+        Ship ship1 = new Ship(Ship.ShipType.DESTROYER);
+        Ship ship2 = new Ship(Ship.ShipType.SUBMARINE);
+
+        board.placeShip(0, 0, Board.Direction.RIGHT, ship1);
+        board.placeShip(2, 2, Board.Direction.DOWN, ship2);
+
+        // Hit all cells of ship1
+        board.hit(0, 0);
+        board.hit(1, 0);
+
+        // Partially hit ship2
+        board.hit(2, 2);
+
+        assertFalse(board.allShipsSunk());
+    }
 }
